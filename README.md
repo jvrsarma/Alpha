@@ -11,3 +11,4 @@ This knowledge base contains the following files with limited implementation.
 #6 ListFilesRecursively.cpp: Simple Implementation of Listing files in a folder recursively using C++ in LINUX environment.
 #7 Singleton.cpp           : Simple implementation of THREAD-SAFE Singleton class using C++ with Atomic and Mutex.
 #8 Factorial-Meta.cpp      : Simple implementation of Meta Factorial class using C++ (CRTP/Static Polymorphism)
+#9 FizzBuzz-Meta.cpp       : Simple implementation of Meta FizzBuzz structure using C++ (CRTP/Static Polymorphism)
