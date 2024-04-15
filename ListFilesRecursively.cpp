@@ -19,12 +19,12 @@ void ListFiles(string path)
             if (strcmp(fld->d_name, ".") == 0 || strcmp(fld->d_name, "..") == 0) continue;  // Do not consider "." (current) and ".." (parent) folders
 
             path = (path[path.length()-1] != '/' ? path + "/" : path);      // Standardize the path by adding "/" at the end (if not present)
-            path = path + fld->d_name;                                      // Create New path with read folder name.
+            string strpath = path + fld->d_name;                                      // Create New path with read folder name.
             
             if (fld->d_type == DT_DIR)      // If the type of the Item is folder, then call ListFiles() recursively to process again.
-                ListFiles(path);            // Process the current folder.
+                ListFiles(strpath);            // Process the current folder.
             else                            // If the item is Not a folder and is a File
-                cout << path << endl;       // Print the file name.
+                cout << strpath << endl;       // Print the file name.
         } closedir(dp);         // Close directory on exit.
     }
 }
