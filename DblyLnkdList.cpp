@@ -1,223 +1,191 @@
+// Doubly Linked List
 #include<iostream>
 using namespace std;
 
-class DLnkLst {
-    int iVal;
-    DLnkLst* Head;
-    DLnkLst* Next;
-    DLnkLst* Prev;
-public:
-    DLnkLst() : Head(nullptr), Next(nullptr), Prev(nullptr) {}
+class DblLnkLst
+{
+        DblLnkLst* Head;
+        DblLnkLst* Next;
+        DblLnkLst* Prev;
+        int        iVal;
+    public:
+        DblLnkLst(int ival = 0) : Head(nullptr), Next(nullptr), Prev(nullptr), iVal(ival) {}
 
-    // Insert the element 
-    void Insert(int data) {
-        if (Next == nullptr) { // Create first node to insert by allocating memory to the firt node
-            Next = new DLnkLst();
-            Next->Next = nullptr;
-            Next->Prev = nullptr;
-            Next->iVal = data;
-            Head = Next;  // At beginning Head and Next will point to same node.
+		// Insert the element 
+        void Insert(int ival)
+        {
+            if (Next == nullptr)	// Create first node to insert by allocating memory to the firt node
+            {
+                Next = new DblLnkLst(ival);
+                Next->Next = nullptr;
+                Next->Prev = nullptr;
+                Head = Next;		// At the beginning, Head and Next will point to same node.
+            } else
+            {
+                DblLnkLst* Temp = new DblLnkLst(ival);  // Create Next node and so on, by creating temporary node and assinging to the Next->Next...
+                Temp->Next = nullptr;
+                Temp->Prev = Next;
+                Next->Next = Temp;
+                Next = Next->Next;	// Each time Next will advance to point to last created node.
+            }
+            cout << Next->iVal << " ";
         }
-        else {
-            DLnkLst* Temp = new DLnkLst();  // Create Next node and so on, by creating temporary node and assinging to the Next->Next...
-            Temp->Next = nullptr;
-            Temp->Prev = Next;
-            Temp->iVal = data;
-            Next->Next = Temp;
-            Next = Next->Next;  // Each time Next will advance to point to last created node.
+        
+		//Print list in Forward direction (Head/Start to End )
+        void PrintForward()
+        {
+            cout <<"Printing Doubly Linked List Forward Direction (Head/Start to End)" << endl;
+            DblLnkLst* Temp = Head;
+            while(Temp != nullptr) 
+            {
+                cout << Temp->iVal << " " ;
+                Temp = Temp->Next;
+            }
+            cout << endl;
         }
-    }
-
-    //Print list in Forward direction (Head to End/Tail/Rear)
-    void PrintForward() {
-        DLnkLst* Temp = Head;
-        cout << "Printing Doubly Linked List Forward directioin." << endl;
-        while (Temp != nullptr) {
-            cout << Temp->iVal << " ";
-            Temp = Temp->Next;
+        
+		//Print list in Backward direction (End to Start/Head).
+        void PrintBckward()
+        {
+            cout <<"Printing Doubly Linked List Backward Direction (End to Start/Head)" << endl;
+            DblLnkLst* Temp = Next;
+            while(Temp != nullptr) 
+            {
+                cout << Temp->iVal << " " ;
+                Temp = Temp->Prev;
+            }
+            cout << endl;
         }
-        cout << endl;
-    }
-
-    //Print list in Backward direction (End/Tail/Rear to Head).
-    void PrintReverse() {
-        cout << "Printing Doubly Linked List in Reverse Order. " << endl;
-        DLnkLst* Temp = Next;
-        while (Temp != nullptr) {
-            cout << Temp->iVal << " ";
-            Temp = Temp->Prev;
+        
+		// Remove entire Doubly linked list from the start position.
+        void Remove()
+        {
+            cout << "Removing elements from Head/Start to End from Doubly Linked List: " << endl;
+            while(Head != nullptr)
+            {
+                DblLnkLst* Temp = Head;
+                cout << Temp->iVal << " ";
+                Head = Head->Next;
+                delete Temp; Temp = nullptr;
+            }
         }
-        cout << endl;
-    }
+        
+		// Insert element at given position from the start of Doubly Linked List (Forward move and Insert).
+        void InsertElementsAtFwdPos(int fPos, int data)
+        {
+            DblLnkLst* Temp = Head;
 
-    // Insert element from the start of Doubly Linked List.
-    void InsertAtFPos(int fPos, int data) {
-        DLnkLst* Temp = Head;
-
-        // Run through the list till we reach the position to insert the element.
-        while (--fPos > 0 && Temp != nullptr) {
-            Temp = Temp->Next;
-        }
-
-        // Check the position is within the boundary, if not exit.
-        if (Temp == nullptr && fPos > 0) { cout << "Position provided is greater than Doubly Linked List." << endl; return; }
-
-        // Store the links
-        DLnkLst* PosL = Temp->Prev;
-        DLnkLst* PosR = Temp->Prev->Next;
-
-        // Create a temporary link
-        DLnkLst* T1 = new DLnkLst();
-        T1->iVal = data;
-        T1->Prev = PosL;
-        T1->Next = PosR;
-
-        // Insert the temporary link to comlete the insertion.
-        PosL->Next = T1;
-        PosR->Prev = T1;
-    }
-
-    // Insert element from the end of Doubly Linked List.
-    void InsertAtRPos(int bPos, int data) {
-        DLnkLst* Temp = Next;
-
-        // Run through the list till we reach the position to insert the element.
-        while (--bPos > 0 && Temp != nullptr) {
-            Temp = Temp->Prev;
-        }
-
-        // Check the position is within the boundary, if not exit.
-        if (Temp == nullptr && bPos > 0) { cout << "Position provided is greater than Doubly Linked List." << endl; return; }
-
-        // Store the links
-        DLnkLst* PosL = Temp;
-        DLnkLst* PosR = Temp->Next;
-
-        // Create a temporary link
-        DLnkLst* T1 = new DLnkLst();
-        T1->iVal = data;
-        T1->Prev = PosL;
-        T1->Next = PosR;
-
-        // Insert the temporary link to comlete the insertion.
-        PosL->Next = T1;
-        PosR->Prev = T1;
-    }
-
-    // Remove entire Doubly linked list.
-    void RemoveLnkLst() {
-        cout << " Deleting all elements from Doubly Linked List: " << endl;
-        while (Head != nullptr) {
-            DLnkLst* Temp = Head;
-            Head = Head->Next;
-            cout << Temp->iVal << " ";
-            delete Temp; Temp = nullptr;
-        }
-        Head = Next = Prev = nullptr;
-    }
-
-    // Remove node at Nth position from the begining.
-    void RemoveNthElementFromStart(int fPos1) {
-        DLnkLst* Temp = Head;
-
-        // Run through the list till we reach the position to insert the element.
-        while (--fPos1 > 0 && Temp != nullptr) {
-            Temp = Temp->Next;
+			// Run through the list till we reach the position to insert the element.
+            while(--fPos > 0 && Temp != nullptr) { Temp = Temp->Next; }
+            
+			// Check whether the position is within the boundary, if not exit.
+            if (fPos > 0 && Temp == nullptr) { cout << "Given position to insert is bigger than Doubly Linked List size, Exiting. " << endl; return; }
+            
+            DblLnkLst* T1 = new DblLnkLst(data);	// Create a New Node and assign data.
+            T1->Next = Temp;						// New Node's next should point to current node.
+            Temp->Prev->Next = T1;					// Attach the New node to the current node.
+            T1->Prev = Temp->Prev;					// New Node's previous should point to current Node's previous node.
+            Temp->Prev = T1;						// Finally current node's previous should point to New node.
         }
 
-        // Check the position is within the boundary, if not exit.
-        if (Temp == nullptr && fPos1 > 0) { cout << "Position provided is greater than Doubly Linked List." << endl; return; }
+		// Insert element at a given position from the end of Doubly Linked List (Reverse move and Insert).
+        void InsertElementsAtBwdPos(int bPos, int data)
+        {
+            DblLnkLst* Temp = Next;
+            while(--bPos > 0 && Temp != nullptr) { Temp = Temp->Prev; }
+            
+            if (bPos > 0 && Temp == nullptr) { cout << "Given position to insert is bigger than Doubly Linked List size, Exiting. " << endl; return; }
+            
+            DblLnkLst* T1 = new DblLnkLst(data);	// Create a New Node and assign data.
+            T1->Prev = Temp;                    	// New Node's prev should point to current node.
+            Temp->Next->Prev = T1;              	// Attach the New node to the current node.
+            T1->Next = Temp->Next;              	// New Node's next should point to current Node's Next node.
+            Temp->Next = T1;                    	// Finally current node's next should point to New node.
+        }
+		
+		// Remove node at Nth position from the begining.
+	        void RemoveNthElementFromStart(int N)
+        {
+            cout <<"Removing " << N << "th element from the beginning. " << endl;
+            DblLnkLst* Temp = Head;
 
-        // Store the links
-        DLnkLst* T = Temp;
-        DLnkLst* PosL = Temp->Prev;
-        DLnkLst* PosR = Temp->Next;
-        Temp = Temp->Next;
-
-        //Now remove the link
-        delete T; T = nullptr;
-
-        // Rejoin the links after deletion.
-        PosL->Next = PosR;
-        Temp->Prev = PosL;
-        PrintForward();
-    }
-
-    // Remove node at Nth position from the end.
-    void RemoveNthElementFromEnd(int bPos1) {
-        DLnkLst* Temp = Next;
-
-        // Run through the list till we reach the position to delete the element.
-        while (--bPos1 > 0 && Temp != nullptr) {
-            Temp = Temp->Prev;
+			// Run through the list till we reach the position to insert the element.
+            while(--N > 0 && Temp != nullptr) { Temp = Temp->Next; }
+            
+			// Check the position is within the boundary, if not exit.
+            if (Temp == nullptr && N > 0) { cout << "Provided position is greater than the size of DoublyLinkedList, Exiting. " << endl; return; }
+            
+            DblLnkLst* T1 = Temp;					// Back-up the current node (which should be deleted) to keep the links
+            
+            Temp->Prev->Next=Temp->Next;			// Current node's previous node's next should point to current node's next.
+            Temp->Next->Prev = T1->Prev;			// Current node's next node's previous should point to curren node's previous.
+            delete T1; T1 = nullptr;				// After linking delete the current link node.
         }
 
-        // Check the position is within the boundary, if not exit.
-        if (Temp == nullptr && bPos1 > 0) { cout << "Position provided is greater than Doubly Linked List." << endl; return; }
+		// Remove node at Nth position from the end.
+        void RemoveNthElementFromEnd(int N)
+        {
+            cout <<"Removing " << N << "th element from the beginning. " << endl;
+            DblLnkLst* Temp = Next;
 
-        // Store the links
-        DLnkLst* T = Temp;
-        DLnkLst* PosL = Temp->Prev;
-        DLnkLst* PosR = Temp->Next;
-
-        // Now remove the link
-        Temp = Temp->Next;
-        delete T; T = nullptr;
-
-        // Rejoin the links after deletion.
-        PosL->Next = PosR;
-        Temp->Prev = PosL;
-        PrintReverse();
-    }
-
-
+			// Run through the list till we reach the position to insert the element.
+            while(--N > 0 && Temp != nullptr) { Temp = Temp->Prev; }
+            
+			// Check the position is within the boundary, if not exit.
+            if (Temp == nullptr && N > 0) { cout << "Provided position is greater than the size of DoublyLinkedList, Exiting. " << endl; return; }
+            
+            DblLnkLst* T1 = Temp;					// Back-up the current node (which should be deleted) to keep the links
+                                                
+            Temp->Next->Prev=Temp->Prev;        	// Current node's next node's previous should point to current node's previous.
+            Temp->Prev->Next = T1->Next;        	// Current node's previous node's next should point to curren node's next.
+            delete T1; T1 = nullptr;            	// After linking delete the current link node.
+        }
+		
 };
 
-int DoublyLinkedList(int lstsize) {
-    DLnkLst dl;
-
-    for (int i = 0; i < lstsize; i++) {
-        dl.Insert(i * 5);
-    }
+int DoublyLinkedList(int lstsize)
+{
+    DblLnkLst dl;
+    cout << "Inserting Data into Doubly Linked List: " << endl;
+    for (int i = 0; i < lstsize; i++)
+        dl.Insert(i * 10);
+    cout << endl;
+    
     dl.PrintForward();
-    dl.PrintReverse();
-    cout << endl;
-
-    int fPos1 = 10; int elem1 = 5500;
-    cout << "Inserting element " << elem1 << " at " << fPos1 << "th position from the start : " << endl;
-    dl.InsertAtFPos(fPos1, elem1);
-    cout << "Priting list forward direction after inserting element " << elem1 << " at " << fPos1 << "th position from the start: " << endl;
+    dl.PrintBckward();
+    cout << endl;    
+    
+    cout << "Inserting element 77777 at position 6 from Head: --------- "<< endl;
+    dl.InsertElementsAtFwdPos(6, 77777);
     dl.PrintForward();
-    cout << "Priting list backword direction after inserting element " << elem1 << " at " << fPos1 << "th position from the start : " << endl; 
-    dl.PrintReverse();
+    dl.PrintBckward();
     cout << endl;
-
-    int bPos1 = 20; int elem2 = 5600;
-    cout << "Inserting element " << elem2 << " at " << bPos1 << "th position from the end: " << endl;
-    dl.InsertAtRPos(bPos1, elem2);
-    cout << "Priting list forward direction after inserting element " << elem2 << " at " << bPos1 << "th position from the end: " << endl;
+    
+    cout << "Inserting element 88888 at position 8 from End: --------- "<< endl;
+    dl.InsertElementsAtBwdPos(8, 88888);
     dl.PrintForward();
-    cout << "Priting list backword direction after inserting element " << elem2 << " at " << bPos1 << "th position from the end: " << endl;
-    dl.PrintReverse();
+    dl.PrintBckward();
     cout << endl;
 
-    fPos1 = 8;
-    cout << "Delete an element at " << fPos1 << " from the begining/start. " << endl;
-    dl.RemoveNthElementFromStart(fPos1);
+    cout << "Remove element at position 10 from Head: --------- "<< endl;
+    dl.RemoveNthElementFromStart(10);
+    dl.PrintForward();
+    dl.PrintBckward();
+    cout << endl;
+    
+    cout << "Remove element at position 12 from End: --------- "<< endl;
+    dl.RemoveNthElementFromEnd(12);
+    dl.PrintForward();
+    dl.PrintBckward();
     cout << endl;
 
-    bPos1 = 3;
-    cout << "Delete an element at: " << bPos1 << " from the end." << endl;
-    dl.RemoveNthElementFromEnd(bPos1);
-    cout << endl;
-
-    dl.RemoveLnkLst();
-
+    dl.Remove();
+    
     return 0;
 }
 
 int main()
 {
-    DoublyLinkedList(30);
+    DoublyLinkedList(20);
     return 0;
 }
